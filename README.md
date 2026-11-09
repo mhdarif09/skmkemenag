@@ -31,11 +31,17 @@ Atau gunakan script setup:
 composer run setup
 ```
 
-Akun demo (password: `password`):
+Akun admin (dibuat oleh `AdminUserSeeder`):
 
-- superadmin@kemenag.palembang.go.id (super_admin)
-- adminunit@kemenag.palembang.go.id (admin_unit)
-- viewer@kemenag.palembang.go.id (viewer)
+| Email | Role | Keterangan |
+|---|---|---|
+| superadmin@kemenag.palembang.go.id | super_admin | Akses penuh termasuk impor data |
+| adminunit@kemenag.palembang.go.id | admin_unit | Dashboard, laporan, impor data |
+| viewer@kemenag.palembang.go.id | viewer | Hanya melihat (read-only) |
+
+- Password default lokal: `password`.
+- Di produksi set `IKM_SEED_PASSWORD` (email kustom: `IKM_SEED_SUPER_EMAIL`, `IKM_SEED_UNIT_EMAIL`, `IKM_SEED_VIEWER_EMAIL`) **sebelum** `php artisan db:seed`, lalu segera ganti password lewat `/user/profile`.
+- Seeder ini idempotent — aman dijalankan ulang tanpa membuat duplikat.
 
 ## Perhitungan IKM
 
