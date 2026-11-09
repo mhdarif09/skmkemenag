@@ -42,6 +42,23 @@ const UNIT_COLORS = ['#047857', '#0284c7', '#d97706', '#7c3aed', '#db2777', '#08
 const OCCUPATION_COLORS = ['#047857', '#0284c7', '#d97706', '#db2777', '#7c3aed', '#0891b2'];
 
 const AXIS_TICK = { fontSize: 10, fill: '#6b7280' } as const;
+
+const MONTH_SHORT: Record<string, string> = {
+    Januari: 'Jan', Februari: 'Feb', Maret: 'Mar', April: 'Apr', Mei: 'Mei', Juni: 'Jun',
+    Juli: 'Jul', Agustus: 'Agu', September: 'Sep', Oktober: 'Okt', November: 'Nov', Desember: 'Des',
+};
+
+/** "Survei September 2026" -> "Sep 2026" so mobile axes stay readable. */
+function shortPeriod(name: string): string {
+    const cleaned = name.replace(/^Survei\s+/i, '');
+    const match = cleaned.match(/^(\p{L}+)\s+(\d{4})$/u);
+
+    if (!match) {
+        return cleaned;
+    }
+
+    return `${MONTH_SHORT[match[1]] ?? match[1].slice(0, 3)} ${match[2]}`;
+}
 const TOOLTIP_STYLE: React.CSSProperties = {
     borderRadius: '0.75rem',
     border: '1px solid #e5e7eb',
@@ -131,10 +148,19 @@ export default function AdminDashboard({
     // NRR: potong label panjang untuk sumbu Y, teks penuh tetap ada di tooltip
     const nrrData = [...nrrPerQuestion].sort((a, b) => a.nrr - b.nrr).map((q) => ({
         ...q,
-        short: q.question.length > 42 ? `${q.question.slice(0, 42)}…` : q.question,
+        short: q.question.length > 20 ? `${q.question.slice(0, 20)}…` : q.question,
     }));
 
-    const unitData = ikmPerUnit.map((u, i) => ({ ...u, fill: UNIT_COLORS[i % UNIT_COLORS.length] }));
+    const unitData = [...ikmPerUnit]
+        .sort((a, b) => b.ikm_total - a.ikm_total)
+        .map((u, i) => ({
+            ...u,
+            fill: UNIT_COLORS[i % UNIT_COLORS.length],
+            short: u.unit.length > 20 ? `${u.unit.slice(0, 20)}…` : u.unit,
+        }));
+
+    const gradeColor = (ikmValue: number) =>
+        ikmValue >= 88.31 ? COLORS.gradeA : ikmValue >= 76.61 ? COLORS.gradeB : ikmValue >= 65 ? COLORS.gradeC : COLORS.gradeD;
 
     return (
         <>
@@ -189,7 +215,7 @@ export default function AdminDashboard({
                 </div>
 
                 {/* Tren IKM */}
-                <div className="mb-4 grid grid-cols-1 gap-4 xl:grid-cols-5">
+                <div className="mb-4 grid grid-cols-1 items-start gap-4 xl:grid-cols-5">
                     <Card className="shadow-sm xl:col-span-3">
                         <CardHeader className="pb-1">
                             <CardTitle className="text-base font-bold">Tren IKM per Periode</CardTitle>
@@ -203,7 +229,7 @@ export default function AdminDashboard({
                             ]} />
                             <div className="mt-2 h-[280px] w-full sm:h-[300px]">
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <AreaChart data={ikmPerPeriod} margin={{ top: 8, right: 12, left: -8, bottom: 0 }}>
+                                    <AreaChart data={ikmPerPeriod} margin={{ top: 8, right: 32, left: -8, bottom: 0 }}>
                                         <defs>
                                             <linearGradient id="gTotal" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="0%" stopColor={COLORS.total} stopOpacity={0.25} />
@@ -219,7 +245,7 @@ export default function AdminDashboard({
                                             </linearGradient>
                                         </defs>
                                         <CartesianGrid stroke="#eef2ee" strokeDasharray="4 4" vertical={false} />
-                                        <XAxis dataKey="period" tick={AXIS_TICK} tickLine={false} axisLine={false} interval="preserveStartEnd" minTickGap={24} />
+                                        <XAxis dataKey="period" tick={AXIS_TICK} tickLine={false} axisLine={false} interval={0} tickFormatter={shortPeriod} />
                                         <YAxis domain={[70, 100]} tick={AXIS_TICK} tickLine={false} axisLine={false} width={40} ticks={[70, 75, 80, 85, 90, 95, 100]} />
                                         <Tooltip content={<ChartTooltip />} />
                                         <ReferenceLine y={88.31} stroke="#047857" strokeDasharray="5 5" label={{ value: 'Target A (88,31)', position: 'insideTopRight', fontSize: 10, fill: '#047857' }} />
@@ -239,7 +265,7 @@ export default function AdminDashboard({
                             <CardDescription>Terendah → tertinggi</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="h-[280px] w-full sm:h-[300px]">
+                            <div className="hidden h-[420px] w-full sm:block sm:h-[440px]">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart data={nrrData} layout="vertical" margin={{ top: 0, right: 16, left: 0, bottom: 0 }}>
                                         <CartesianGrid stroke="#eef2ee" strokeDasharray="4 4" horizontal={false} />
@@ -254,6 +280,32 @@ export default function AdminDashboard({
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>
+
+                            {/* Mobile: full question text + value, no cramped axis labels */}
+                            <div className="divide-y sm:hidden">
+                                {nrrData.map((q, i) => {
+                                    const color = gradeColor(q.nrr * 25);
+
+                                    return (
+                                        <div key={q.question} className="flex items-start gap-2.5 py-2.5 first:pt-0 last:pb-0">
+                                            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gray-100 text-[10px] font-bold text-gray-500">
+                                                {i + 1}
+                                            </span>
+                                            <div className="min-w-0 flex-1">
+                                                <p className="text-[11px] leading-snug font-medium text-gray-700">{q.question}</p>
+                                                <div className="mt-1.5 flex items-center gap-2">
+                                                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-100">
+                                                        <div className="h-full rounded-full" style={{ width: `${(q.nrr / 4) * 100}%`, background: color }} />
+                                                    </div>
+                                                    <span className="w-9 shrink-0 text-right text-[11px] font-bold" style={{ color }}>
+                                                        {formatNumber(q.nrr)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
                             <LegendDots items={[
                                 { color: COLORS.gradeA, label: 'A · ≥88,31' },
                                 { color: COLORS.gradeB, label: 'B · ≥76,61' },
@@ -265,21 +317,21 @@ export default function AdminDashboard({
                 </div>
 
                 {/* Unit + Profil */}
-                <div className="mb-4 grid grid-cols-1 gap-4 xl:grid-cols-5">
+                <div className="mb-4 grid grid-cols-1 items-start gap-4 xl:grid-cols-5">
                     <Card className="shadow-sm xl:col-span-3">
                         <CardHeader className="pb-1">
                             <CardTitle className="text-base font-bold">IKM per Unit Layanan</CardTitle>
                             <CardDescription>Setiap unit warna berbeda</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="h-[260px] w-full sm:h-[280px]">
+                            <div className="h-[280px] w-full sm:h-[300px]">
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={unitData} margin={{ top: 8, right: 12, left: -8, bottom: 0 }}>
-                                        <CartesianGrid stroke="#eef2ee" strokeDasharray="4 4" vertical={false} />
-                                        <XAxis dataKey="unit" tick={{ fontSize: 9, fill: '#6b7280' }} tickLine={false} axisLine={false} interval={0} angle={-20} textAnchor="end" height={64} />
-                                        <YAxis domain={[0, 100]} tick={AXIS_TICK} tickLine={false} axisLine={false} width={40} />
+                                    <BarChart data={unitData} layout="vertical" margin={{ top: 0, right: 16, left: 0, bottom: 0 }}>
+                                        <CartesianGrid stroke="#eef2ee" strokeDasharray="4 4" horizontal={false} />
+                                        <XAxis type="number" domain={[0, 100]} tick={AXIS_TICK} tickLine={false} axisLine={false} />
+                                        <YAxis type="category" dataKey="short" tick={{ fontSize: 9, fill: '#6b7280' }} tickLine={false} axisLine={false} width={112} />
                                         <Tooltip content={<ChartTooltip />} cursor={{ fill: '#f3f4f6' }} />
-                                        <Bar dataKey="ikm_total" name="IKM Total" radius={[8, 8, 0, 0]}>
+                                        <Bar dataKey="ikm_total" name="IKM Total" radius={[0, 8, 8, 0]} barSize={16}>
                                             {unitData.map((u) => <Cell key={u.unit} fill={u.fill} />)}
                                         </Bar>
                                     </BarChart>

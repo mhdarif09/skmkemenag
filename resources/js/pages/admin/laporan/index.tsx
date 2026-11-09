@@ -105,8 +105,8 @@ export default function LaporanPage({
                         </div>
 
                         <div className="mb-5 grid grid-cols-1 gap-4 xl:grid-cols-5">
-                            {/* Grafik NRR */}
-                            <Card className="shadow-sm xl:col-span-3">
+                            {/* Grafik NRR — desktop only; mobile pakai daftar di bawah */}
+                            <Card className="hidden shadow-sm sm:block xl:col-span-3">
                                 <CardHeader>
                                     <CardTitle className="text-base font-bold">NRR per Pertanyaan</CardTitle>
                                     <CardDescription>Hijau = Pelayanan · Ungu = Anti Korupsi</CardDescription>
@@ -146,7 +146,7 @@ export default function LaporanPage({
                                                 <div key={i} className="flex items-center gap-2.5 rounded-xl border bg-gray-50/60 p-2.5">
                                                     <span className="h-8 w-1.5 shrink-0 rounded-full" style={{ background: q.fill }} />
                                                     <div className="min-w-0 flex-1">
-                                                        <div className="truncate text-xs font-medium text-gray-800">{q.text}</div>
+                                                        <div className="line-clamp-2 text-xs font-medium text-gray-800 sm:truncate">{q.text}</div>
                                                         <div className="text-[11px] text-gray-400">{GROUP_LABEL[q.group as 'A' | 'B'] ?? q.group} · Indeks {formatNumber(q.ikm)}</div>
                                                     </div>
                                                     <Badge style={{ background: GRADE_STYLE[q.grade]?.bg, color: GRADE_STYLE[q.grade]?.text }} className="shrink-0 border-0">{q.grade}</Badge>
