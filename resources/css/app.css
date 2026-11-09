@@ -76,7 +76,7 @@
 }
 
 :root {
-    --radius: 0.625rem;
+    --radius: 0.75rem;
 
     /* Kemenag brand tokens */
     --kemenag-primary: #1B7F3B;
@@ -94,7 +94,7 @@
     --grade-d: #C62828;
 
     /* shadcn tokens mapped to the Kemenag palette */
-    --background: var(--kemenag-surface);
+    --background: #F6F9F6;
     --foreground: var(--kemenag-text);
     --card: var(--kemenag-surface);
     --card-foreground: var(--kemenag-text);
@@ -104,14 +104,14 @@
     --primary-foreground: #FFFFFF;
     --secondary: var(--kemenag-primary-light);
     --secondary-foreground: var(--kemenag-primary-dark);
-    --muted: var(--kemenag-primary-light);
-    --muted-foreground: var(--kemenag-muted);
+    --muted: #EEF5EF;
+    --muted-foreground: #5B6B5F;
     --accent: var(--kemenag-accent);
-    --accent-foreground: var(--kemenag-text);
+    --accent-foreground: #3D2E00;
     --destructive: #C62828;
     --destructive-foreground: #FFFFFF;
-    --border: #E5E7EB;
-    --input: #E5E7EB;
+    --border: #E4EBE4;
+    --input: #DCE4DC;
     --ring: var(--kemenag-primary);
     --chart-1: var(--kemenag-primary);
     --chart-2: var(--grade-b);
@@ -135,8 +135,8 @@
     --card-foreground: #F3F4F6;
     --popover: #14231A;
     --popover-foreground: #F3F4F6;
-    --primary: var(--kemenag-primary-light);
-    --primary-foreground: var(--kemenag-primary-dark);
+    --primary: var(--kemenag-primary);
+    --primary-foreground: #FFFFFF;
     --secondary: #1F3A28;
     --secondary-foreground: #E6F4EA;
     --muted: #1F3A28;
@@ -183,5 +183,72 @@
 
     body {
         @apply bg-background text-foreground;
+        font-feature-settings: 'cv02', 'cv03', 'cv04';
+    }
+
+    ::selection {
+        background: var(--kemenag-primary);
+        color: #fff;
     }
 }
+
+@layer utilities {
+    /* Brand gradient for solid elements (buttons, icons) */
+    .gradient-brand {
+        background-image: linear-gradient(135deg, #2E9E54 0%, var(--kemenag-primary) 45%, var(--kemenag-primary-dark) 100%);
+    }
+
+    /* Hero gradient with soft radial decorations; decoration painted on top */
+    .hero-brand {
+        background-image:
+            radial-gradient(circle at 85% 20%, rgba(242, 183, 5, 0.25) 0, transparent 24%),
+            radial-gradient(circle at 92% 75%, rgba(255, 255, 255, 0.12) 0, transparent 26%),
+            radial-gradient(circle at 8% 85%, rgba(255, 255, 255, 0.1) 0, transparent 30%),
+            linear-gradient(135deg, #2E9E54 0%, #1B7F3B 45%, #0F5A28 100%);
+    }
+
+    /* Soft elevation used across cards */
+    .shadow-soft {
+        box-shadow:
+            0 1px 2px rgb(16 40 24 / 0.04),
+            0 6px 24px -8px rgb(16 40 24 / 0.1);
+    }
+
+    .shadow-pop {
+        box-shadow:
+            0 1px 2px rgb(16 40 24 / 0.05),
+            0 14px 40px -10px rgb(16 40 24 / 0.22);
+    }
+
+    /* Entrance animation used by thank-you check and step transitions */
+    .animate-pop-in {
+        animation: pop-in 0.35s cubic-bezier(0.22, 1.4, 0.36, 1) both;
+    }
+
+    @keyframes pop-in {
+        from {
+            opacity: 0;
+            transform: scale(0.85) translateY(8px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    .animate-fade-up {
+        animation: fade-up 0.4s ease-out both;
+    }
+
+    @keyframes fade-up {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+

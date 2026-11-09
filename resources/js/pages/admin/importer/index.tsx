@@ -1,5 +1,8 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
+import { UploadCloud } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { AdminShell } from '@/components/admin-shell';
+import { commit as commitRoute, preview as previewRoute } from '@/routes/admin/importer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -123,7 +126,7 @@ export default function ImporterPage({ periods }: { periods: { id: number; name:
             const body = new FormData();
             body.append('file', file);
 
-            const response = await post(route('admin.importer.preview'), body);
+            const response = await post(previewRoute.url(), body);
             if (!response.ok) {
                 setError('Gagal membaca file. Pastikan format CSV atau XLSX dari Google Form.');
 
@@ -152,7 +155,7 @@ export default function ImporterPage({ periods }: { periods: { id: number; name:
             body.append('file', file);
             body.append('period_id', periodId);
 
-            const response = await post(route('admin.importer.commit'), body);
+            const response = await post(commitRoute.url(), body);
             if (!response.ok) {
                 setError('Gagal menyimpan data impor.');
 
@@ -175,29 +178,10 @@ export default function ImporterPage({ periods }: { periods: { id: number; name:
     return (
         <>
             <Head title="Impor Data" />
-            <div className="min-h-screen bg-background text-foreground">
-                <header className="border-b border-border bg-card">
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-                        <div className="flex items-center gap-2">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground">
-                                KA
-                            </div>
-                            <span className="text-lg font-semibold text-primary">Kementerian Agama Kota Palembang</span>
-                        </div>
-                        <Link href="/admin" className="text-sm text-muted-foreground">
-                            Kembali ke Dashboard
-                        </Link>
-                    </div>
-                    <div className="h-1 bg-accent" />
-                </header>
-
-                <main className="mx-auto max-w-7xl space-y-6 px-6 py-6">
-                    <div>
-                        <h1 className="text-2xl font-bold text-primary">Impor Data Survei Lama</h1>
-                        <p className="text-muted-foreground">
-                            Unggah hasil ekspor Google Form (CSV/XLSX) lama, periksa pratinjau, lalu simpan ke database.
-                        </p>
-                    </div>
+            <AdminShell
+                title="Impor Data Survei Lama"
+                subtitle="Unggah hasil ekspor Google Form (CSV/XLSX), periksa pratinjau, lalu simpan ke database."
+            >
 
                     <Card>
                         <CardHeader>
@@ -217,7 +201,14 @@ export default function ImporterPage({ periods }: { periods: { id: number; name:
                                     {fileName && <span className="ml-2 text-xs text-muted-foreground">{fileName}</span>}
                                 </div>
                                 <Button onClick={runPreview} disabled={busy !== null}>
-                                    {busy === 'preview' ? 'Memproses…' : 'Tampilkan Pratinjau'}
+                                    {busy === 'preview' ? (
+                                        <>Memproses…</>
+                                    ) : (
+                                        <>
+                                            <UploadCloud className="mr-1 h-4 w-4" />
+                                            Tampilkan Pratinjau
+                                        </>
+                                    )}
                                 </Button>
                             </div>
                             {error && <p className="text-sm text-destructive">{error}</p>}
@@ -381,8 +372,7 @@ export default function ImporterPage({ periods }: { periods: { id: number; name:
                             </Card>
                         </>
                     )}
-                </main>
-            </div>
+            </AdminShell>
         </>
     );
 }

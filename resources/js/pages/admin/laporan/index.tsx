@@ -1,5 +1,6 @@
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
+import { AdminShell } from '@/components/admin-shell';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -44,8 +45,6 @@ export default function LaporanPage({
     conclusion,
     recommendation,
     comments,
-    organizationName,
-    logoPath,
 }: {
     periods: { id: number; name: string; is_active: boolean }[];
     serviceUnits: { id: number; name: string }[];
@@ -56,8 +55,6 @@ export default function LaporanPage({
     conclusion: string | null;
     recommendation: string | null;
     comments: Comment[];
-    organizationName: string;
-    logoPath: string | null;
 }) {
     const [periodId, setPeriodId] = useState(filters.period_id ? String(filters.period_id) : '');
     const [serviceUnitId, setServiceUnitId] = useState(filters.service_unit_id ? String(filters.service_unit_id) : '');
@@ -85,34 +82,12 @@ export default function LaporanPage({
     return (
         <>
             <Head title="Laporan" />
-            <div className="min-h-screen bg-background text-foreground">
-                <header className="border-b border-border bg-card">
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-                        <div className="flex items-center gap-2">
-                            {logoPath ? (
-                                <img src={logoPath} alt="Logo" className="h-8 w-8 object-contain" />
-                            ) : (
-                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">KA</div>
-                            )}
-                            <span className="text-lg font-semibold text-primary">{organizationName}</span>
-                        </div>
-                        <Link href="/admin" className="text-sm text-muted-foreground">
-                            Kembali ke Dashboard
-                        </Link>
-                    </div>
-                    <div className="h-1 bg-accent" />
-                </header>
-
-                <main className="mx-auto max-w-7xl px-6 py-6">
-                    {/* Header + filters */}
-                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-6">
-                        <div>
-                            <h1 className="text-2xl font-bold text-primary">Laporan IKM</h1>
-                            <p className="text-muted-foreground">
-                                Indeks Kepuasan Masyarakat dan Persepsi Anti Korupsi
-                            </p>
-                        </div>
-                        <div className="flex flex-wrap items-end gap-3">
+            <AdminShell
+                title="Laporan IKM"
+                subtitle="Indeks Kepuasan Masyarakat dan Persepsi Anti Korupsi"
+            >
+                    {/* Filters */}
+                    <div className="flex flex-wrap items-end gap-3">
                             <div>
                                 <label className="mb-1 block text-xs text-muted-foreground">Periode</label>
                                 <Select value={periodId} onValueChange={setPeriodId}>
@@ -157,7 +132,6 @@ export default function LaporanPage({
                             >
                                 Export PDF
                             </a>
-                        </div>
                     </div>
 
                     {ikm ? (
@@ -322,8 +296,7 @@ export default function LaporanPage({
                             <p className="text-muted-foreground">Belum ada data responden untuk filter yang dipilih.</p>
                         </div>
                     )}
-                </main>
-            </div>
+            </AdminShell>
         </>
     );
 }

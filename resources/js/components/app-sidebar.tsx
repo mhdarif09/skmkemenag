@@ -1,6 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
-import AppLogo from '@/components/app-logo';
+import { BarChart3, Database, LayoutDashboard } from 'lucide-react';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -20,22 +19,21 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
-        icon: LayoutGrid,
+        icon: LayoutDashboard,
+    },
+    {
+        title: 'Laporan IKM',
+        href: '/admin/laporan',
+        icon: BarChart3,
+    },
+    {
+        title: 'Impor Data',
+        href: '/admin/importer',
+        icon: Database,
     },
 ];
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-];
+const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
     return (
@@ -45,7 +43,15 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <Link href={dashboard()} prefetch>
-                                <AppLogo />
+                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg gradient-brand text-[10px] font-bold text-white shadow-soft">
+                                    KA
+                                </div>
+                                <div className="ml-1 grid flex-1 text-left text-sm leading-tight">
+                                    <span className="mb-0.5 truncate font-semibold">Panel Admin SKM</span>
+                                    <span className="truncate text-[11px] text-muted-foreground">
+                                        Kemenag Kota Palembang
+                                    </span>
+                                </div>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

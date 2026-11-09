@@ -1,4 +1,4 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import {
     Bar,
@@ -15,6 +15,8 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
+import { AdminShell } from '@/components/admin-shell';
+import { Award, Gauge, HandHeart, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -93,18 +95,7 @@ export default function AdminDashboard({
     return (
         <>
             <Head title="Dashboard Admin" />
-            <div className="min-h-screen bg-background text-foreground">
-                <header className="border-b border-border bg-card">
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-                        <div className="text-lg font-semibold text-primary">Dashboard Admin — {organizationName}</div>
-                        <Link href="/admin" className="text-sm text-muted-foreground">
-                            Beranda
-                        </Link>
-                    </div>
-                    <div className="h-1 bg-accent" />
-                </header>
-
-                <main className="mx-auto max-w-7xl px-6 py-6">
+            <AdminShell title="Dashboard" subtitle={organizationName}>
                     {/* Filters */}
                     <div className="mb-6 flex flex-wrap items-end gap-3">
                         <div>
@@ -145,7 +136,12 @@ export default function AdminDashboard({
                     <div className="mb-6 grid gap-4 md:grid-cols-4">
                         <Card>
                             <CardHeader>
-                                <CardTitle className="text-sm text-muted-foreground">IKM Total</CardTitle>
+                                <div className="flex items-center gap-2">
+                                    <span className="flex h-7 w-7 items-center justify-center rounded-lg gradient-brand text-white">
+                                        <Gauge className="h-4 w-4" />
+                                    </span>
+                                    <CardTitle className="text-sm text-muted-foreground">IKM Total</CardTitle>
+                                </div>
                             </CardHeader>
                             <CardContent>
                                 <div className="text-3xl font-bold text-primary">
@@ -155,7 +151,12 @@ export default function AdminDashboard({
                         </Card>
                         <Card>
                             <CardHeader>
-                                <CardTitle className="text-sm text-muted-foreground">IKM Pelayanan</CardTitle>
+                                <div className="flex items-center gap-2">
+                                    <span className="flex h-7 w-7 items-center justify-center rounded-lg gradient-brand text-white">
+                                        <HandHeart className="h-4 w-4" />
+                                    </span>
+                                    <CardTitle className="text-sm text-muted-foreground">IKM Pelayanan</CardTitle>
+                                </div>
                             </CardHeader>
                             <CardContent>
                                 <div className="text-3xl font-bold">{ikm ? formatNumber(ikm.ikm_pelayanan) : '-'}</div>
@@ -163,7 +164,12 @@ export default function AdminDashboard({
                         </Card>
                         <Card>
                             <CardHeader>
-                                <CardTitle className="text-sm text-muted-foreground">Indeks Anti Korupsi</CardTitle>
+                                <div className="flex items-center gap-2">
+                                    <span className="flex h-7 w-7 items-center justify-center rounded-lg gradient-brand text-white">
+                                        <ShieldCheck className="h-4 w-4" />
+                                    </span>
+                                    <CardTitle className="text-sm text-muted-foreground">Indeks Anti Korupsi</CardTitle>
+                                </div>
                             </CardHeader>
                             <CardContent>
                                 <div className="text-3xl font-bold">{ikm ? formatNumber(ikm.ikm_anti_corruption) : '-'}</div>
@@ -171,11 +177,16 @@ export default function AdminDashboard({
                         </Card>
                         <Card>
                             <CardHeader>
-                                <CardTitle className="text-sm text-muted-foreground">Mutu Pelayanan</CardTitle>
+                                <div className="flex items-center gap-2">
+                                    <span className="flex h-7 w-7 items-center justify-center rounded-lg gradient-brand text-white">
+                                        <Award className="h-4 w-4" />
+                                    </span>
+                                    <CardTitle className="text-sm text-muted-foreground">Mutu Pelayanan</CardTitle>
+                                </div>
                             </CardHeader>
                             <CardContent className="flex items-center gap-3">
                                 {ikm && (
-                                    <span className={`rounded px-3 py-1 text-lg font-bold ${gradeColor(ikm.grade)}`}>
+                                    <span className={`rounded-xl px-3 py-1.5 text-lg font-bold ${gradeColor(ikm.grade)}`}>
                                         {ikm.grade}
                                     </span>
                                 )}
@@ -278,8 +289,7 @@ export default function AdminDashboard({
                             </div>
                         </CardContent>
                     </Card>
-                </main>
-            </div>
+            </AdminShell>
         </>
     );
 }

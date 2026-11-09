@@ -16,7 +16,12 @@ void createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     layout: (name) => {
         switch (true) {
+            // Public survey pages and admin pages bring their own full-page shells
+            // (PublicShell / AdminShell) — they must NOT be wrapped in the starter
+            // sidebar layout.
             case name === 'welcome':
+            case name.startsWith('survey/'):
+            case name.startsWith('admin/'):
                 return null;
             case name.startsWith('auth/'):
                 return AuthLayout;
