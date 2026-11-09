@@ -12,13 +12,12 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: dashboard(),
+        href: '/admin',
         icon: LayoutDashboard,
     },
     {
@@ -42,7 +41,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href="/admin" prefetch>
                                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg gradient-brand text-[10px] font-bold text-white shadow-soft">
                                     KA
                                 </div>

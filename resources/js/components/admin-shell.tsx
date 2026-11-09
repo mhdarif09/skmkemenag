@@ -10,8 +10,8 @@ const NAV = [
 ];
 
 /**
- * Shared admin layout: dark-green top bar with navigation and a link to the
- * public site. All admin pages (dashboard, laporan, importer) render inside.
+ * Shared admin layout: clean white sticky header with Kemenag + BerAKHLAK
+ * lockup, pill nav, and a user chip. Theme: putih + hijau tua.
  */
 export function AdminShell({
     children,
@@ -28,58 +28,56 @@ export function AdminShell({
     const user = (page.props.auth?.user ?? { name: 'Pengguna' }) as { name: string };
 
     return (
-        <div className="min-h-screen bg-background text-foreground">
-            <header className="sticky top-0 z-40 bg-kemenag-primary-dark text-white shadow-pop">
-                <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3 sm:px-6">
-                    <Link href="/admin" className="flex items-center gap-2.5">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-xs font-bold ring-1 ring-white/25">
-                            KA
-                        </div>
-                        <div className="hidden leading-tight sm:block">
-                            <span className="block text-sm font-semibold">Panel Admin</span>
-                            <span className="block text-[11px] text-white/70">SKM & Persepsi Anti Korupsi</span>
-                        </div>
+        <div className="min-h-screen bg-[#F6F9F6] text-foreground">
+            <header className="sticky top-0 z-40 border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
+                <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:gap-4 sm:px-6">
+                    <Link href="/admin" className="flex shrink-0 items-center gap-2.5">
+                        <img src="/logo.png" alt="Logo Kemenag" className="h-10 w-10 rounded-xl border bg-white object-contain p-0.5 sm:h-11 sm:w-11" />
+                        <span className="hidden leading-tight sm:block">
+                            <span className="block text-[10px] font-bold tracking-[0.14em] text-kemenag-primary uppercase">Panel Admin</span>
+                            <span className="block max-w-[150px] truncate text-[13px] font-semibold text-foreground">
+                                Kemenag Kota Palembang
+                            </span>
+                        </span>
                     </Link>
 
-                    <nav className="flex items-center gap-1 rounded-full bg-white/10 p-1">
+                    <nav className="mx-auto flex items-center gap-1 overflow-x-auto rounded-full bg-[#EEF5EF] p-1 sm:mx-0 sm:ml-4" aria-label="Navigasi admin">
                         {NAV.map((item) => {
-                            const active =
-                                item.href === '/admin' ? page.url === '/admin' : page.url.startsWith(item.href);
+                            const active = item.href === '/admin' ? page.url === '/admin' : page.url.startsWith(item.href);
                             const Icon = item.icon;
-
                             return (
                                 <Link
                                     key={item.href}
                                     href={item.href}
                                     className={cn(
-                                        'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm transition-colors',
+                                        'inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 text-[13px] font-medium whitespace-nowrap transition-all sm:px-4',
                                         active
-                                            ? 'bg-white font-semibold text-kemenag-primary-dark'
-                                            : 'text-white/80 hover:bg-white/10 hover:text-white',
+                                            ? 'bg-kemenag-primary-dark text-white shadow-sm'
+                                            : 'text-muted-foreground hover:bg-white hover:text-foreground',
                                     )}
                                 >
                                     <Icon className="h-4 w-4" />
-                                    <span className="hidden sm:inline">{item.label}</span>
+                                    {item.label}
                                 </Link>
                             );
                         })}
                     </nav>
 
-                    <div className="ml-auto flex items-center gap-3 text-sm">
-                        <Link href="/" className="hidden text-white/75 underline-offset-4 hover:text-white hover:underline md:inline">
+                    <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+                        <Link href="/" className="hidden text-[13px] font-medium text-muted-foreground hover:text-kemenag-primary-dark md:inline">
                             Lihat Situs
                         </Link>
-                        <span className="hidden items-center gap-2 md:inline-flex">
-                            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-xs font-bold">
+                        <span className="hidden items-center gap-2 rounded-full border bg-white py-1 pr-3 pl-1 md:inline-flex">
+                            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-kemenag-primary-dark text-[11px] font-bold text-white">
                                 {user.name.slice(0, 2).toUpperCase()}
                             </span>
-                            <span className="text-white/85">{user.name}</span>
+                            <span className="max-w-[120px] truncate text-[13px] font-medium">{user.name}</span>
                         </span>
                         <Link
                             href="/logout"
                             method="post"
                             as="button"
-                            className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-sm text-white/85 transition-colors hover:bg-white/20 hover:text-white"
+                            className="inline-flex items-center gap-1.5 rounded-full border px-3 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                         >
                             <LogOut className="h-4 w-4" />
                             <span className="hidden sm:inline">Keluar</span>
@@ -88,11 +86,11 @@ export function AdminShell({
                 </div>
             </header>
 
-            <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-                <div className="mb-6 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-                    <div>
-                        <h1 className="text-2xl font-bold tracking-tight text-foreground">{title}</h1>
-                        {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
+            <main className="mx-auto max-w-7xl px-4 pt-6 pb-10 sm:px-6">
+                <div className="mb-5 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-end sm:justify-between">
+                    <div className="min-w-0">
+                        <h1 className="truncate text-xl font-extrabold tracking-tight text-foreground sm:text-2xl">{title}</h1>
+                        {subtitle && <p className="mt-1 truncate text-sm text-muted-foreground">{subtitle}</p>}
                     </div>
                     {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
                 </div>
