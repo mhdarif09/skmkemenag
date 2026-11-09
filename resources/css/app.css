@@ -250,5 +250,127 @@
             transform: translateY(0);
         }
     }
+
+    /* Elastic spring pop — stepper circles, thank-you seal */
+    .animate-pop-spring {
+        animation: pop-spring 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes pop-spring {
+        0% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        55% {
+            opacity: 1;
+            transform: scale(1.12);
+        }
+        78% {
+            transform: scale(0.94);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Expanding acknowledgement rings behind the thank-you seal */
+    .animate-ring-ping {
+        animation: ring-ping 1.4s cubic-bezier(0, 0, 0.2, 1) both;
+    }
+
+    @keyframes ring-ping {
+        0% {
+            opacity: 0.45;
+            transform: scale(0.55);
+        }
+        100% {
+            opacity: 0;
+            transform: scale(2.1);
+        }
+    }
+
+    /* Self-drawing circle & check inside the thank-you seal */
+    .animate-circle-draw {
+        animation: circle-draw 0.6s ease-out both;
+    }
+
+    @keyframes circle-draw {
+        from {
+            stroke-dashoffset: 302;
+        }
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    .animate-check-draw {
+        animation: check-draw 0.45s ease-out 0.35s both;
+    }
+
+    @keyframes check-draw {
+        from {
+            stroke-dashoffset: 62;
+        }
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    /* Directional step transitions in the wizard */
+    .animate-slide-fwd {
+        animation: slide-fwd 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes slide-fwd {
+        from {
+            opacity: 0;
+            transform: translateX(32px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .animate-slide-back {
+        animation: slide-back 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes slide-back {
+        from {
+            opacity: 0;
+            transform: translateX(-32px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Gentle drift for decorative blobs — institutional calm, not bounce */
+    .animate-drift {
+        animation: drift 7s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift {
+        from {
+            transform: translateY(0) translateX(0);
+        }
+        to {
+            transform: translateY(-14px) translateX(18px);
+        }
+    }
+}
+
+/* Respect reduced-motion preferences across all custom animations */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 

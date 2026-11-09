@@ -70,6 +70,7 @@ export default function Wizard({
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [submitting, setSubmitting] = useState(false);
     const [honeypot, setHoneypot] = useState('');
+    const [direction, setDirection] = useState<'fwd' | 'back'>('fwd');
 
     const setField = (field: keyof Draft, value: unknown) =>
         setDraft((prev) => ({ ...prev, [field]: value }));
@@ -113,11 +114,13 @@ export default function Wizard({
     const next = () => {
         if (draft.step === 1 && !validateStep1()) return;
         if (draft.step === 2 && !validateStep2()) return;
+        setDirection('fwd');
         setField('step', draft.step + 1);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const back = () => {
+        setDirection('back');
         setField('step', Math.max(1, draft.step - 1));
         setErrors({});
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -178,11 +181,12 @@ export default function Wizard({
                                     <div className="flex flex-col items-center gap-1.5">
                                         <span
                                             className={cn(
-                                                'flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold transition-colors',
+                                                'animate-pop-spring flex h-10 w-10 items-center justify-center rounded-full border-2 font-bold transition-colors',
                                                 isActive && 'border-primary bg-primary text-white shadow-[0_6px_16px_-6px_var(--kemenag-primary)]',
                                                 isDone && 'border-primary bg-secondary text-primary',
                                                 !isActive && !isDone && 'border-border bg-card text-muted-foreground',
                                             )}
+                                            style={{ animationDelay: `${i * 110}ms` }}
                                         >
                                             {isDone ? <Check className="h-5 w-5" strokeWidth={3} /> : <Icon className="h-4.5 w-4.5" />}
                                         </span>
@@ -196,7 +200,12 @@ export default function Wizard({
                                         </span>
                                     </div>
                                     {i < STEP_META.length - 1 && (
-                                        <div className={cn('mx-2 -mt-6 h-0.5 flex-1 rounded-full', isDone ? 'bg-primary' : 'bg-border')} />
+                                        <span className="mx-2 -mt-6 relative h-0.5 flex-1 overflow-hidden rounded-full bg-border">
+                                            <span
+                                                className="absolute inset-0 rounded-full bg-primary transition-transform duration-500 ease-out"
+                                                style={{ transform: `scaleX(${isDone ? 1 : 0})`, transformOrigin: 'left' }}
+                                            />
+                                        </span>
                                     )}
                                 </div>
                             );
@@ -232,7 +241,10 @@ export default function Wizard({
                         />
                     </div>
 
-                    <div key={draft.step} className="animate-fade-up space-y-5">
+                    <div
+                        key={draft.step}
+                        className={cn('space-y-5', direction === 'fwd' ? 'animate-slide-fwd' : 'animate-slide-back')}
+                    >
                         {draft.step === 1 && (
                             <>
                                 <div className="grid gap-4 rounded-2xl border bg-card p-5 shadow-soft sm:grid-cols-2 sm:p-6">
