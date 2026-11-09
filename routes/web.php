@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\SurveyController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +17,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'role:super_admin|admin_unit|viewer'])->group(function () {
-    Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::prefix('laporan')->name('laporan.')->group(function () {
+        Route::get('/', [LaporanController::class, 'index'])->name('index');
+        Route::get('/export/excel', [LaporanController::class, 'exportExcel'])->name('excel');
+        Route::get('/export/pdf', [LaporanController::class, 'exportPdf'])->name('pdf');
+    });
 });
 
 require __DIR__.'/settings.php';

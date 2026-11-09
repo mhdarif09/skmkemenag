@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $response_id
@@ -25,5 +26,13 @@ class ResponseAnswer extends Model
         return [
             'score' => 'integer',
         ];
+    }
+
+    /**
+     * @return BelongsTo<Question, $this>
+     */
+    public function question(): BelongsTo
+    {
+        return $this->belongsTo(Question::class);
     }
 }
