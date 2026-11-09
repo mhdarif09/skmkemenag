@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ImporterController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\SurveyController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'role:su
         Route::get('/', [LaporanController::class, 'index'])->name('index');
         Route::get('/export/excel', [LaporanController::class, 'exportExcel'])->name('excel');
         Route::get('/export/pdf', [LaporanController::class, 'exportPdf'])->name('pdf');
+    });
+
+    Route::prefix('importer')->name('importer.')->group(function () {
+        Route::get('/', [ImporterController::class, 'index'])
+            ->name('index');
+        Route::post('/preview', [ImporterController::class, 'preview'])
+            ->middleware('role:super_admin|admin_unit')
+            ->name('preview');
+        Route::post('/commit', [ImporterController::class, 'commit'])
+            ->middleware('role:super_admin|admin_unit')
+            ->name('commit');
     });
 });
 
