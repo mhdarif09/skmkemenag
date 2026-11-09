@@ -450,7 +450,7 @@ function FieldBlock({
     children: React.ReactNode;
 }) {
     return (
-        <div className={className}>
+        <div className={cn('min-w-0', className)}>
             <Label className="mb-1.5 block text-sm">
                 {label}
                 {required && <span className="ml-0.5 font-bold text-destructive">*</span>}

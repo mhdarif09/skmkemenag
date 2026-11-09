@@ -12,14 +12,29 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class PeriodFactory extends Factory
 {
     /**
+     * Monotonic counter so factory-created period names stay unique even
+     * when several periods are created inside one test.
+     */
+    private static int $sequence = 0;
+
+    /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
     public function definition(): array
     {
+        $months = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+        ];
+
+        $index = self::$sequence++;
+        $month = $months[$index % 12];
+        $year = 2025 + intdiv($index, 12);
+
         return [
-            'name' => 'Survei '.fake()->monthName().' '.fake()->year(),
+            'name' => "Survei {$month} {$year}",
             'start_date' => Carbon::now()->subMonths(6),
             'end_date' => Carbon::now()->addMonths(5),
             'is_active' => false,

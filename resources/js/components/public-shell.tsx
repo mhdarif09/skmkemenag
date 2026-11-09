@@ -8,7 +8,7 @@ import type { ReactNode } from 'react';
  */
 export function LogoLockup({ logoPath, dark = false }: { logoPath: string | null; dark?: boolean }) {
     return (
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 shrink-0">
             <img
                 src={logoPath ?? '/logo.png'}
                 alt="Logo Kementerian Agama RI"
@@ -46,13 +46,13 @@ export function PublicShell({
         <div className="flex min-h-screen flex-col bg-background text-foreground">
             <header className="sticky top-0 z-40 border-b bg-card/95 backdrop-blur">
                 <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
-                    <Link href="/" aria-label="Kembali ke beranda" className="flex items-center gap-3">
+                    <Link href="/" aria-label="Kembali ke beranda" className="flex min-w-0 items-center gap-3">
                         <LogoLockup logoPath={logoPath} />
                         <span className="min-w-0 leading-tight">
                             <span className="block text-[10px] font-semibold tracking-[0.12em] text-primary uppercase">
                                 Kementerian Agama
                             </span>
-                            <span className="block truncate text-sm font-bold text-foreground sm:text-base">
+                            <span className="line-clamp-2 block break-words text-sm font-bold text-foreground sm:text-base">
                                 {organizationName}
                             </span>
                         </span>
