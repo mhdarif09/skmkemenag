@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ImporterController;
 use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Admin\ServiceUnitController;
 use App\Http\Controllers\SurveyController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,12 +30,28 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'role:su
     Route::prefix('importer')->name('importer.')->group(function () {
         Route::get('/', [ImporterController::class, 'index'])
             ->name('index');
+        Route::get('/template', [ImporterController::class, 'template'])
+            ->name('template');
         Route::post('/preview', [ImporterController::class, 'preview'])
             ->middleware('role:super_admin|admin_unit')
             ->name('preview');
         Route::post('/commit', [ImporterController::class, 'commit'])
             ->middleware('role:super_admin|admin_unit')
             ->name('commit');
+    });
+
+    // Master data: admin can add/edit/delete service units themselves.
+    Route::prefix('units')->name('units.')->group(function () {
+        Route::get('/', [ServiceUnitController::class, 'index'])->name('index');
+        Route::post('/', [ServiceUnitController::class, 'store'])
+            ->middleware('role:super_admin|admin_unit')
+            ->name('store');
+        Route::put('/{unit}', [ServiceUnitController::class, 'update'])
+            ->middleware('role:super_admin|admin_unit')
+            ->name('update');
+        Route::delete('/{unit}', [ServiceUnitController::class, 'destroy'])
+            ->middleware('role:super_admin|admin_unit')
+            ->name('destroy');
     });
 });
 

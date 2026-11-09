@@ -11,6 +11,7 @@ import {
     Legend,
     Pie,
     PieChart,
+    ReferenceLine,
     ResponsiveContainer,
     Tooltip,
     XAxis,
@@ -192,7 +193,7 @@ export default function AdminDashboard({
                     <Card className="shadow-sm xl:col-span-3">
                         <CardHeader className="pb-1">
                             <CardTitle className="text-base font-bold">Tren IKM per Periode</CardTitle>
-                            <CardDescription>Setiap garis = satu kategori</CardDescription>
+                            <CardDescription>Setiap garis = satu kategori · skala 70–100</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <LegendDots items={[
@@ -219,11 +220,12 @@ export default function AdminDashboard({
                                         </defs>
                                         <CartesianGrid stroke="#eef2ee" strokeDasharray="4 4" vertical={false} />
                                         <XAxis dataKey="period" tick={AXIS_TICK} tickLine={false} axisLine={false} interval="preserveStartEnd" minTickGap={24} />
-                                        <YAxis domain={[0, 100]} tick={AXIS_TICK} tickLine={false} axisLine={false} width={40} />
+                                        <YAxis domain={[70, 100]} tick={AXIS_TICK} tickLine={false} axisLine={false} width={40} ticks={[70, 75, 80, 85, 90, 95, 100]} />
                                         <Tooltip content={<ChartTooltip />} />
-                                        <Area type="monotone" dataKey="ikm_total" stroke={COLORS.total} strokeWidth={3} fill="url(#gTotal)" name="IKM Total" dot={false} activeDot={{ r: 5 }} />
-                                        <Area type="monotone" dataKey="ikm_pelayanan" stroke={COLORS.pelayanan} strokeWidth={2.5} fill="url(#gPel)" name="Pelayanan" dot={false} activeDot={{ r: 4 }} />
-                                        <Area type="monotone" dataKey="ikm_anti_corruption" stroke={COLORS.antiKorupsi} strokeWidth={2.5} fill="url(#gAnti)" name="Anti Korupsi" dot={false} activeDot={{ r: 4 }} />
+                                        <ReferenceLine y={88.31} stroke="#047857" strokeDasharray="5 5" label={{ value: 'Target A (88,31)', position: 'insideTopRight', fontSize: 10, fill: '#047857' }} />
+                                        <Area type="monotone" dataKey="ikm_total" stroke={COLORS.total} strokeWidth={3} fill="url(#gTotal)" name="IKM Total" dot={{ r: 5, strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6 }} />
+                                        <Area type="monotone" dataKey="ikm_pelayanan" stroke={COLORS.pelayanan} strokeWidth={2.5} fill="url(#gPel)" name="Pelayanan" dot={{ r: 4, strokeWidth: 2, stroke: "#fff" }} activeDot={{ r: 5 }} />
+                                        <Area type="monotone" dataKey="ikm_anti_corruption" stroke={COLORS.antiKorupsi} strokeWidth={2.5} fill="url(#gAnti)" name="Anti Korupsi" dot={{ r: 4, strokeWidth: 2, stroke: "#fff" }} activeDot={{ r: 5 }} />
                                     </AreaChart>
                                 </ResponsiveContainer>
                             </div>

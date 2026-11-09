@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BarChart3, Database, LayoutDashboard } from 'lucide-react';
+import { BarChart3, Building2, Database, LayoutDashboard } from 'lucide-react';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -29,6 +29,11 @@ const mainNavItems: NavItem[] = [
         title: 'Impor Data',
         href: '/admin/importer',
         icon: Database,
+    },
+    {
+        title: 'Unit Layanan',
+        href: '/admin/units',
+        icon: Building2,
     },
 ];
 

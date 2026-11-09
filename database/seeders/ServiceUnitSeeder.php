@@ -11,16 +11,20 @@ class ServiceUnitSeeder extends Seeder
      * @var list<array<string, null|string>>
      */
     public const UNITS = [
-        ['name' => 'SETJEN', 'description' => 'PTSP/PPID/Kepegawaian/Keuangan/TU Umum'],
-        ['name' => 'Seksi PD Pontren', 'description' => null],
+        ['name' => 'Sekretariat Jenderal (PPID / TU Umum / Kepegawaian / Keuangan / Protokol)', 'description' => 'PPID, TU Umum, Kepegawaian, Keuangan, Protokol'],
         ['name' => 'Seksi Pendidikan Madrasah', 'description' => null],
+        ['name' => 'Seksi Pendidikan Agama Islam', 'description' => null],
+        ['name' => 'Bimbingan Masyarakat Islam', 'description' => null],
+        ['name' => 'Penyelenggara Zakat Wakaf', 'description' => null],
         ['name' => 'Penyelenggara Kristen', 'description' => null],
+        ['name' => 'Penyelenggara Buddha', 'description' => null],
+        ['name' => 'Seksi Pendidikan Diniyah dan Pondok Pesantren', 'description' => null],
     ];
 
     public function run(): void
     {
         foreach (self::UNITS as $unit) {
-            ServiceUnit::create($unit);
+            ServiceUnit::firstOrCreate(['name' => $unit['name']], $unit);
         }
     }
 }

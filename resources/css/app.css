@@ -193,6 +193,31 @@
 }
 
 @layer utilities {
+    /* Dark-green sidebar theme for all authenticated pages.
+       Explicit properties (not CSS-var chains): Tailwind v4 resolves the
+       --color-* → --sidebar chain on :root, so overriding the var on a
+       scoped element has no effect. Attribute selectors beat the generated
+       utility classes on specificity, and the mobile drawer (rendered in a
+       portal) carries the same data-sidebar attribute. */
+    [data-sidebar='sidebar'] {
+        background-color: #0b3b21;
+        color: #dff2e4;
+    }
+
+    [data-sidebar='sidebar'] [data-sidebar='menu-button'] {
+        color: #dff2e4;
+    }
+
+    [data-sidebar='sidebar'] [data-sidebar='menu-button']:hover {
+        background-color: rgb(255 255 255 / 0.1);
+        color: #ffffff;
+    }
+
+    [data-sidebar='sidebar'] [data-sidebar='menu-button'][data-active='true'] {
+        background-color: #ffffff;
+        color: #0b3b21;
+    }
+
     /* Brand gradient for solid elements (buttons, icons) */
     .gradient-brand {
         background-image: linear-gradient(135deg, #2E9E54 0%, var(--kemenag-primary) 45%, var(--kemenag-primary-dark) 100%);

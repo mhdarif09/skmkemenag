@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Services\GoogleFormImportService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
@@ -56,6 +57,61 @@ class ImporterController extends Controller
         $result = $service->commit($rows, $mapping, $questions, $units, (int) $validated['period_id'], $user);
 
         return response()->json($result);
+    }
+
+    /**
+     * Download a CSV template whose headers exactly match what the
+     * importer's header mapper expects (Google Form export style).
+     */
+    public function template(): Response
+    {
+        $questions = Question::query()->where('is_active', true)->orderBy('order')->pluck('text');
+        $units = ServiceUnit::query()->where('is_active', true)->orderBy('name')->pluck('name');
+
+        $headers = [
+            'Timestamp',
+            'Nama',
+            'Jenis Kelamin (L/P)',
+            'Kota Domisili',
+            'Pekerjaan',
+            'Unit Layanan',
+            'Kebutuhan',
+            ...$questions->all(),
+            'Komentar / Saran (opsional)',
+        ];
+
+        $firstUnit = $units->first() ?? 'Seksi Pendidikan Madrasah';
+
+        $example = [
+            '2026-11-09 09:15:00',
+            'Contoh Responden',
+            'L',
+            'Palembang',
+            'ASN',
+            $firstUnit,
+            'Contoh kebutuhan layanan',
+            ...array_fill(0, $questions->count(), 4),
+            'Contoh saran (boleh kosong)',
+        ];
+
+        $csv = implode(',', array_map($this->csvCell(...), $headers))."\n";
+        $csv .= implode(',', array_map($this->csvCell(...), $example))."\n";
+
+        return response($csv, 200, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="template-import-survei.csv"',
+        ]);
+    }
+
+    private function csvCell(mixed $value): string
+    {
+        $cell = (string) $value;
+
+        if (str_contains($cell, ',') || str_contains($cell, '"') || str_contains($cell, "\n")) {
+            return '"'.str_replace('"', '""', $cell).'"';
+        }
+
+        return $cell;
     }
 
     /**

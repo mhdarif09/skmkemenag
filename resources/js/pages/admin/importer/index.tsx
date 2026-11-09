@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react';
-import { UploadCloud } from 'lucide-react';
+import { Download, UploadCloud } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { AdminShell } from '@/components/admin-shell';
 import { commit as commitRoute, preview as previewRoute } from '@/routes/admin/importer';
@@ -210,7 +210,16 @@ export default function ImporterPage({ periods }: { periods: { id: number; name:
                                         </>
                                     )}
                                 </Button>
+                                <Button asChild variant="outline" className="rounded-xl" disabled={busy !== null}>
+                                    <a href="/admin/importer/template">
+                                        <Download className="mr-1 h-4 w-4" />
+                                        Unduh Template CSV
+                                    </a>
+                                </Button>
                             </div>
+                            <p className="text-xs text-muted-foreground">
+                                Template berisi header standar + 1 baris contoh. Isi sesuai data, lalu unggah di sini.
+                            </p>
                             {error && <p className="text-sm text-destructive">{error}</p>}
                         </CardContent>
                     </Card>
