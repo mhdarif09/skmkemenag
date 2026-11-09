@@ -78,8 +78,9 @@ Font: Inter (self-hosted via @fontsource). Body minimum 16px di mobile.
 4. Grade mutu pelayanan dihitung dari IKM Pelayanan (bukan IKM Total).
 5. Mode anonim: bila aktif, nama responden boleh kosong.
 6. Caching IKM per filter dan invalidasi tag belum diimplementasikan (perhitungan langsung dari DB).
-7. Import CSV/XLSX dan ekspor PDF/Excel admin masih berupa placeholder; logika inti (parser, mapper) akan ditambahkan pada iterasi berikutnya.
-8. `formatNumber()` tersedia di PHP (`App\Support\NumberFormatter`) dan di React (`resources/js/lib/formatNumber.ts`) dengan aturan yang sama (desimal koma, pemisah ribuan titik, 2 desimal).
+7. Impor data lama dijalankan sinkron pada request (tanpa queue/progress bar) karena volume data tiap periode kecil; parser otomatis memetakan kolom Google Form lama, memisahkan gabungan "Pilihan Pelayanan"/"Kebutuhan" dengan pencocokan awalan nama unit layanan, menerima timestamp `dd/mm/yyyy H:mm:ss`, memetakan teks Likert (Sangat Puas=4 … Tidak Puas=1), melewati baris error/duplikat (nama + unit + kebutuhan sama dalam 10 menit), dan membuat baris pekerjaan baru bila belum ada (is_active=false). Role `viewer` hanya dapat melihat halaman impor, tidak dapat memproses.
+8. Ekspor Excel laporan terdiri dari 3 sheet (Rekap Responden, NRR per Pertanyaan, IKM) dan PDF menggunakan DomPDF dengan grafik SVG di sisi server.
+9. `formatNumber()` tersedia di PHP (`App\Support\NumberFormatter`) dan di React (`resources/js/lib/formatNumber.ts`) dengan aturan yang sama (desimal koma, pemisah ribuan titik, 2 desimal).
 
 ## Deploy
 
